@@ -16,7 +16,7 @@ function Login() {
     const result = await handleLogin(data)
     console.log('Result', result)
     if (result.success) {
-      navigate('/profile')
+      navigate('/Home')
     } else {
       alert('NO LOGIN FOR SOME REASON')
     }

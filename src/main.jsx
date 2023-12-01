@@ -8,7 +8,7 @@ import GuestLayout from './components/GuestLayout'
 import ProtectedLayout from './components/ProtectedLayout'
 
 import Login from './pages/Login'
-import Profile from './pages/Profile'
+import Home from './pages/Home'
 
 const router = createBrowserRouter([
   {
@@ -26,8 +26,8 @@ const router = createBrowserRouter([
     element: <ProtectedLayout />,
     children: [
       {
-        path: '/profile',
-        element: <Profile />
+        path: '/home',
+        element: <Home />
       }
     ]
   }

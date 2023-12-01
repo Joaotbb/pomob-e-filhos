@@ -12,7 +12,7 @@ function GuestLayout() {
       const token = cookies['pombo-token']
 
       if (token) {
-        navigate('/profile')
+        navigate('/Home')
       }
     }
     validateToken()
