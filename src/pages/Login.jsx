@@ -1,7 +1,10 @@
 import { useForm } from 'react-hook-form'
-import api from '../axios'
+import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
+  const { handleLogin, user } = useAuth()
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -9,22 +12,20 @@ function Login() {
     formState: { errors }
   } = useForm()
 
-  const onSubmit = (data) => {
-    api
-      .post('/login', data)
-      .then((response) => {
-        console.log('Login successful:', response)
-        // Handle success here (e.g., redirect, show message)
-      })
-      .catch((error) => {
-        console.error('Login failed:', error)
-        // Handle error here (e.g., show error message)
-      })
-    console.log(data)
+  const onSubmit = async (data) => {
+    const result = await handleLogin(data)
+    console.log('Result', result)
+    if (result.success) {
+      navigate('/profile')
+    } else {
+      alert('NO LOGIN FOR SOME REASON')
+    }
+    // salva o token nos api.headers 
   }
 
   return (
     <>
+      {user ? <div>{user.name}</div> : null}
       <div>Estou no Login</div>
 
       {/* "handleSubmit" will validate your inputs before invoking "onSubmit"  */}

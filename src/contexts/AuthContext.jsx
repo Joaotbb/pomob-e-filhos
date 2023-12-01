@@ -1,17 +1,34 @@
 import { createContext, useContext, useState } from 'react'
-import axios from '../axios'
+import api from '../axios'
+import { setCookie } from 'nookies'
 
-const AuthContent = createContext({
-  user: null,
-  setUser: () => {},
-  csrfToken: () => {}
-})
+const AuthContent = createContext({})
 
 export const AuthProvider = ({ children }) => {
-  console.log('dentro do context')
+  const [user, setUser] = useState(null)
+
+  const handleLogin = async (data) => {
+    try {
+      const response = await api.post('/login', data)
+      const userData = response.data.user
+      const token = response.data.token
+
+      setCookie(null, 'pombo-token', token, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/'
+      })
+      setUser(userData)
+
+      return { success: true }
+    } catch (error) {
+      console.error('Login error:', error)
+
+      return { success: false }
+    }
+  }
 
   return (
-    <AuthContent.Provider value={{  }}>
+    <AuthContent.Provider value={{ handleLogin }}>
       {children}
     </AuthContent.Provider>
   )
