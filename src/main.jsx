@@ -9,6 +9,7 @@ import ProtectedLayout from './components/ProtectedLayout'
 
 import Login from './pages/Login'
 import Home from './pages/Home'
+import Register from './pages/Register.jsx'
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Login />
+      },
+      {
+        path: '/register',
+        element: <Register />
       }
     ]
   },
