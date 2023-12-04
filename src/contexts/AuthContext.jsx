@@ -7,6 +7,7 @@ const AuthContent = createContext({})
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
 
+  // Login function
   const handleLogin = async (data) => {
     try {
       const response = await api.post('/login', data)
@@ -36,12 +37,13 @@ export const AuthProvider = ({ children }) => {
     if (api.defaults.headers.common) {
       delete api.defaults.headers.common['Authorization']
     }
-    
+
     setUser(null)
-    
+
     console.log('User logged out - logout function executed on AuthContext')
   }
 
+  // Register function
   const handleRegister = async (data) => {
     try {
       const response = await api.post('/register', data)

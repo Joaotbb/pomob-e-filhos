@@ -10,6 +10,9 @@ import ProtectedLayout from './components/ProtectedLayout'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import Register from './pages/Register.jsx'
+import Users from './pages/Users.jsx'
+import Products from './pages/Products.jsx'
+import Orders from './pages/Orders.jsx'
 
 const router = createBrowserRouter([
   {
@@ -33,6 +36,18 @@ const router = createBrowserRouter([
       {
         path: '/home',
         element: <Home />
+      },
+      {
+        path: '/users',
+        element: <Users />
+      },
+      {
+        path: '/Products',
+        element: <Products />
+      },
+      {
+        path: '/Orders',
+        element: <Orders />
       }
     ]
   }

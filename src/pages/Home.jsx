@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 
 function Home() {
   const { user, isAuthenticated } = useAuth()
-  // console.log('user dentro do profile', user)
+  console.log('user dentro do profile', user)
   // console.log('auth dentro do profile', isAuthenticated)
 
   return (
