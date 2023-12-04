@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { parseCookies } from 'nookies'
+import Navbar from './Navbar'
 
 function ProtectedLayout() {
   const { isAuthenticated, user, isLoading } = useAuth()
@@ -13,7 +14,7 @@ function ProtectedLayout() {
       const token = cookies['pombo-token']
 
       //TODO: todo verificar se o token e valido
-      // TODO: salva o token nos api.headers 
+      // TODO: salva o token nos api.headers
       if (!token) {
         navigate('/')
       }
@@ -23,6 +24,7 @@ function ProtectedLayout() {
 
   return (
     <>
+      <Navbar />
       <Outlet />
     </>
   )

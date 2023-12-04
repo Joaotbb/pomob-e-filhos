@@ -16,6 +16,7 @@ function Register() {
 
   const onSubmit = async (data) => {
     const result = await handleRegister(data)
+    console.log(data, 'foi esta data')
     if (result.success) {
       setShowSuccessMessage(true)
       setTimeout(() => {
@@ -25,6 +26,8 @@ function Register() {
       alert(result.message || 'Failed on Register :(.')
     }
   }
+
+  //TODO: name and adress and being sent as NULL, MIGHT NEED TO CHECK WHY
 
   return (
     <div className='flex min-h-full flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8'>

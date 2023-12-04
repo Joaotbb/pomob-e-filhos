@@ -13,6 +13,7 @@ function Login() {
   } = useForm()
 
   const onSubmit = async (data) => {
+
     const result = await handleLogin(data)
     if (result.success) {
       navigate('/Home')
@@ -60,14 +61,14 @@ function Login() {
             {...register('password')}
           />
           <p className='text-center text-sm leading-6 text-gray-500'>
-  Not a member?{' '}
-  <Link
-    to='/register'
-    className='font-semibold text-indigo-600 hover:text-indigo-500'
-  >
-    Register
-  </Link>
-</p>
+            Not a member?{' '}
+            <Link
+              to='/register'
+              className='font-semibold text-indigo-600 hover:text-indigo-500'
+            >
+              Register
+            </Link>
+          </p>
 
           <div className='text-sm  text-center leading-6'>
             <a

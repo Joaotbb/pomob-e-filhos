@@ -1,6 +1,6 @@
 import { createContext, useContext, useState } from 'react'
 import api from '../axios'
-import { setCookie } from 'nookies'
+import { setCookie, destroyCookie } from 'nookies'
 
 const AuthContent = createContext({})
 
@@ -27,6 +27,21 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
+  // Logout function
+  const logout = () => {
+    console.log('Logging out...')
+    destroyCookie(null, 'pombo-token')
+    console.log('pombo-token cookie destroyed')
+    // Remove o auth header  if is being used
+    if (api.defaults.headers.common) {
+      delete api.defaults.headers.common['Authorization']
+    }
+    
+    setUser(null)
+    
+    console.log('User logged out - logout function executed on AuthContext')
+  }
+
   const handleRegister = async (data) => {
     try {
       const response = await api.post('/register', data)
@@ -43,12 +58,17 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Registration error:', error)
 
-      return { success: false, message: error.response.data.message || 'An error occurred during registration.' }
+      return {
+        success: false,
+        message:
+          error.response.data.message ||
+          'An error occurred during registration.'
+      }
     }
   }
 
   return (
-    <AuthContent.Provider value={{ handleLogin, handleRegister }}>
+    <AuthContent.Provider value={{ handleLogin, handleRegister, logout }}>
       {children}
     </AuthContent.Provider>
   )
