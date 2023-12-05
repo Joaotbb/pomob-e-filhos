@@ -3,6 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { parseCookies } from 'nookies'
 import Navbar from './Navbar'
+import Footer from './Footer'
 
 function ProtectedLayout() {
   const { isAuthenticated, user, isLoading } = useAuth()
@@ -26,6 +27,7 @@ function ProtectedLayout() {
     <>
       <Navbar />
       <Outlet />
+      <Footer/>
     </>
   )
 }
