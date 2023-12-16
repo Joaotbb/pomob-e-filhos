@@ -52,34 +52,34 @@ function Register() {
           </div>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className='space-y-6'
+            className='space-y-2'
           >
             <input
               id='name'
               type='text'
-              className='relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-indigo-600'
+              className='registerinput'
               placeholder='Name'
               {...register('name', { required: 'Name is required' })}
             />
             {errors.name && (
-              <p className='text-red-600'>{errors.name.message}</p>
+              <p className='errorinput'>{errors.name.message}</p>
             )}
 
             <input
               id='address'
               type='text'
-              className='relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-indigo-600'
+              className='registerinput'
               placeholder='Address'
               {...register('address', { required: 'Address is required' })}
             />
             {errors.address && (
-              <p className='text-red-600'>{errors.address.message}</p>
+              <p className='errorinput'>{errors.address.message}</p>
             )}
 
             <input
               id='email'
               type='email'
-              className='relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-indigo-600'
+              className='registerinput'
               placeholder='Email address'
               {...register('email', {
                 required: 'Email is required',
@@ -90,18 +90,18 @@ function Register() {
               })}
             />
             {errors.email && (
-              <p className='text-red-600'>{errors.email.message}</p>
+              <p className='errorinput'>{errors.email.message}</p>
             )}
 
             <input
               id='password'
               type='password'
-              className='relative block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-100 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-indigo-600'
+              className='registerinput'
               placeholder='Password'
               {...register('password', { required: 'Password is required' })}
             />
             {errors.password && (
-              <p className='text-red-600'>{errors.password.message}</p>
+              <p className='errorinput'>{errors.password.message}</p>
             )}
 
             <button
