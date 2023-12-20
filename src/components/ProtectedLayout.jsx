@@ -14,7 +14,7 @@ function ProtectedLayout() {
       const cookies = parseCookies()
       const token = cookies['pombo-token']
 
-      //TODO: todo verificar se o token e valido
+      //TODO: verificar se o token e valido
       // TODO: salva o token nos api.headers
       if (!token) {
         navigate('/')
