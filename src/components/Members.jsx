@@ -3,18 +3,22 @@ import { useForm } from "react-hook-form";
 import api from "../axios";
 import CreateUserButton from "../components/CreateUserButton";
 import CreateUserModal from "../components/CreateUserModal";
+import EditUserModal from "../components/EditUserModal"; // Importação do componente EditUserModal
 
 function Members() {
   const [users, setUsers] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null); // Estado para o usuário selecionado para edição
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false); // Estado para controlar a modal de edição
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
+  const formMethods = useForm();
+  const { register, handleSubmit, errors, reset } = formMethods;
+
+  const handleEditClick = (user) => {
+    setSelectedUser(user);
+    setShowEditModal(true);
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -24,8 +28,8 @@ function Members() {
         reset();
         setTimeout(() => {
           setShowSuccessMessage(false);
-          setShowModal(false);
-        }, 2000); // Wait 2 seconds before closing the modal
+          setShowCreateModal(false); // Corrigido para fechar a modal correta
+        }, 2000); // Aguardar 2 segundos antes de fechar a modal
       } else {
         alert("Failed to create user.");
       }
@@ -62,7 +66,7 @@ function Members() {
         </div>
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <CreateUserButton onClick={() => setShowModal(true)} />
+            <CreateUserButton onClick={() => setShowCreateModal(true)} />
           </div>
         </div>
       </div>
@@ -110,12 +114,12 @@ function Members() {
                       {user.role}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => handleEditClick(user)}
                         className="text-indigo-600 hover:text-indigo-900"
                       >
                         Edit<span className="sr-only">, {user.name}</span>
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -123,10 +127,17 @@ function Members() {
             </table>
           </div>
         </div>
-        {showModal && (
+        {showEditModal && (
+          <EditUserModal
+            user={selectedUser}
+            onClose={() => setShowEditModal(false)}
+            formMethods={formMethods}
+          />
+        )}
+        {showCreateModal && (
           <CreateUserModal
             onSubmit={handleSubmit(onSubmit)}
-            onClose={() => setShowModal(false)}
+            onClose={() => setShowCreateModal(false)}
             errors={errors}
             register={register}
             showSuccessMessage={showSuccessMessage}

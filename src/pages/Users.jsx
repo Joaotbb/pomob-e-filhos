@@ -1,4 +1,4 @@
-import UserList from "../components/UserList";
+// import UserList from "../components/UserList";
 import Members from "../components/Members";
 
 function Users() {
@@ -6,7 +6,7 @@ function Users() {
     <div className="container">
       <Members />
 
-      <UserList />
+      {/* <UserList /> */}
     </div>
   );
 }
