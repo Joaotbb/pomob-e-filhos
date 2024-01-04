@@ -2,53 +2,30 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import api from "../axios";
 import CreateUserButton from "../components/CreateUserButton";
-import CreateUserModal from "../components/CreateUserModal";
-import EditUserModal from "../components/EditUserModal"; // Importação do componente EditUserModal
+import UserModal from "./UserModal";
+import { useUsers } from "../contexts/UserContext";
 
 function Members() {
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null); // Estado para o usuário selecionado para edição
+  const { users, fetchUsers } = useUsers();
+
+  const [selectedUser, setSelectedUser] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false); // Estado para controlar a modal de edição
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+ 
 
   const formMethods = useForm();
-  const { register, handleSubmit, errors, reset } = formMethods;
 
   const handleEditClick = (user) => {
     setSelectedUser(user);
     setShowEditModal(true);
   };
 
-  const onSubmit = async (data) => {
-    try {
-      const response = await api.post("/users", data);
-      if (response.data.success) {
-        setShowSuccessMessage(true);
-        reset();
-        setTimeout(() => {
-          setShowSuccessMessage(false);
-          setShowCreateModal(false); // Corrigido para fechar a modal correta
-        }, 2000); // Aguardar 2 segundos antes de fechar a modal
-      } else {
-        alert("Failed to create user.");
-      }
-    } catch (error) {
-      console.error(error.response ? error.response.data : error.message);
-      alert("Failed to create user.");
-    }
+  const handleCloseModal = () => {
+    setShowEditModal(false);
+    setShowCreateModal(false);
   };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await api.get("/users");
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users", error);
-      }
-    };
-
     fetchUsers();
   }, []);
 
@@ -128,19 +105,18 @@ function Members() {
           </div>
         </div>
         {showEditModal && (
-          <EditUserModal
+          <UserModal
+            editMode={true}
             user={selectedUser}
-            onClose={() => setShowEditModal(false)}
+            handleCloseModal={handleCloseModal}
             formMethods={formMethods}
           />
         )}
         {showCreateModal && (
-          <CreateUserModal
-            onSubmit={handleSubmit(onSubmit)}
-            onClose={() => setShowCreateModal(false)}
-            errors={errors}
-            register={register}
-            showSuccessMessage={showSuccessMessage}
+          <UserModal
+            editMode={false}
+            handleCloseModal={handleCloseModal}
+            formMethods={formMethods}
           />
         )}
       </div>
