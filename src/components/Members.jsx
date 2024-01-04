@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import api from "../axios";
+import { useEffect, useState } from "react";
+
 import CreateUserButton from "../components/CreateUserButton";
 import UserModal from "./UserModal";
 import { useUsers } from "../contexts/UserContext";
 
 function Members() {
-  const { users, fetchUsers } = useUsers();
+  const { users, setUsers, fetchUsers } = useUsers();
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
- 
-
-  const formMethods = useForm();
 
   const handleEditClick = (user) => {
     setSelectedUser(user);
@@ -23,6 +20,48 @@ function Members() {
   const handleCloseModal = () => {
     setShowEditModal(false);
     setShowCreateModal(false);
+  };
+
+  const createUser = async (data) => {
+    try {
+      console.log(data, "createUser data ");
+      const response = await api.post("/users", data);
+      if (response.data.success) {
+        console.log(response.data);
+        setUsers([...users, response.data.newUser]);
+      } else {
+        alert("Failed to create user.");
+      }
+    } catch (error) {
+      console.error(error.response ? error.response.data : error.message);
+      alert("Failed to create user.");
+    }
+  };
+
+  const updateUser = async (data, userId) => {
+    console.log(data, "olha aqui");
+    try {
+      const response = await api.put(`/users/${userId}`, data);
+
+      setUsers((prevUsers) => {
+        // Encontrar o usuário que está sendo atualizado
+        const userToUpdate = prevUsers.find((u) => u.id === userId);
+
+        if (userToUpdate) {
+          // Se o usuário for encontrado, atualizar apenas esse usuário na lista
+          const updatedUsers = prevUsers.map((u) =>
+            u.id === userToUpdate.id ? response.data.updatedUser : u
+          );
+
+          return updatedUsers;
+        } else {
+          console.warn("User not found in the current list.");
+          return prevUsers;
+        }
+      });
+    } catch (error) {
+      console.error("Error updating user", error);
+    }
   };
 
   useEffect(() => {
@@ -109,14 +148,14 @@ function Members() {
             editMode={true}
             user={selectedUser}
             handleCloseModal={handleCloseModal}
-            formMethods={formMethods}
+            updateUser={updateUser}
           />
         )}
         {showCreateModal && (
           <UserModal
             editMode={false}
             handleCloseModal={handleCloseModal}
-            formMethods={formMethods}
+            createUser={createUser}
           />
         )}
       </div>

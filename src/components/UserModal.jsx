@@ -1,51 +1,25 @@
 import api from "../axios";
+import { useForm } from "react-hook-form";
 import { useUsers } from "../contexts/UserContext";
 
-function UserModal({ editMode, user, handleCloseModal, formMethods }) {
+function UserModal({
+  editMode,
+  user,
+  createUser,
+  updateUser,
+  handleCloseModal,
+}) {
+  const formMethods = useForm();
   const { register, handleSubmit, errors, reset } = formMethods;
   const { users, setUsers } = useUsers();
 
-  const createUser = async (data) => {
-    try {
-      console.log(data, "createUser data ");
-      const response = await api.post("/users", data);
-      if (response.data.success) {
-        console.log(response.data);
-        setUsers([...users, response.data.newUser]);
-
-        reset();
-        setTimeout(() => {}, 2000);
-      } else {
-        alert("Failed to create user.");
-      }
-    } catch (error) {
-      console.error(error.response ? error.response.data : error.message);
-      alert("Failed to create user.");
-    }
-  };
-
-  const updateUser = async (data) => {
-    try {
-      const response = await api.put(`/users/${user.id}`, data);
-
-      setUsers((prevUsers) => {
-        // Encontrar o usuário que está sendo atualizado
-        const userToUpdate = prevUsers.find((u) => u.id === user.id);
-
-        if (userToUpdate) {
-          // Se o usuário for encontrado, atualizar apenas esse usuário na lista
-          const updatedUsers = prevUsers.map((u) =>
-            u.id === userToUpdate.id ? response.data.updatedUser : u
-          );
-
-          return updatedUsers;
-        } else {
-          console.warn("User not found in the current list.");
-          return prevUsers;
-        }
-      });
-    } catch (error) {
-      console.error("Error updating user", error);
+  const onSubmit = (data) => {
+    // Se editMode for verdadeiro, passe o userId para a função updateUser
+    if (editMode) {
+      updateUser(data, user.id);
+    } else {
+      // Se editMode for falso, chame a função createUser
+      createUser(data);
     }
   };
 
@@ -69,10 +43,7 @@ function UserModal({ editMode, user, handleCloseModal, formMethods }) {
               {editMode ? "Edit User" : "Create User"}
             </h2>
             {/* {showSuccessMessage && <div>Usuário atualizado com sucesso!</div>} */}
-            <form
-              onSubmit={handleSubmit(editMode ? updateUser : createUser)}
-              className="space-y-6"
-            >
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <input
                 type="text"
                 placeholder="Name"
