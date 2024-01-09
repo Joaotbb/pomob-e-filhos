@@ -15,6 +15,7 @@ import Products from "./pages/Products.jsx";
 import Orders from "./pages/Orders.jsx";
 import { UserProvider } from "./contexts/UserContext.jsx";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -58,7 +59,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
       <UserProvider>
-        <RouterProvider router={router}></RouterProvider>
+
+          <RouterProvider router={router}></RouterProvider>
+
       </UserProvider>
     </AuthProvider>
   </React.StrictMode>

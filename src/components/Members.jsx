@@ -1,9 +1,9 @@
 import api from "../axios";
 import { useEffect, useState } from "react";
-
 import CreateUserButton from "../components/CreateUserButton";
 import UserModal from "./UserModal";
 import { useUsers } from "../contexts/UserContext";
+import DeleteModal from "../components/DeleteModal";
 
 function Members() {
   const { users, setUsers, fetchUsers } = useUsers();
@@ -11,6 +11,7 @@ function Members() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleEditClick = (user) => {
     setSelectedUser(user);
@@ -136,7 +137,11 @@ function Members() {
                       >
                         Edit<span className="sr-only">, {user.name}</span>
                       </button>
-                      <button className="ml-2">
+
+                      <button
+                        onClick={() => setShowDeleteModal(true)}
+                        className="ml-2"
+                      >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           width="1em"
@@ -172,6 +177,8 @@ function Members() {
             createUser={createUser}
           />
         )}
+
+        {showDeleteModal && <DeleteModal closeModal={setShowDeleteModal} />}
       </div>
     </div>
   );
