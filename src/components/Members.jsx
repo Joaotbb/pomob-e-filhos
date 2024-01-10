@@ -14,6 +14,7 @@ function Members() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleEditClick = (user) => {
+    console.log("Editing user:", user);
     setSelectedUser(user);
     setShowEditModal(true);
   };
@@ -73,7 +74,7 @@ function Members() {
   const deleteUser = async (userId) => {
     try {
       await api.delete(`/users/${userId}`);
-      setShowDeleteModal(false  );
+      setShowDeleteModal(false);
 
       setUsers((prevUsers) => {
         // Remove the user from the list
@@ -90,11 +91,15 @@ function Members() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    console.log("Selected user updated:", selectedUser);
+  }, [selectedUser]);
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">
+          <h1 className="text-base font-semibold leading-6 text-gray-900 mt-6">
             Users
           </h1>
           <p className="mt-2 text-sm text-gray-700">
@@ -183,14 +188,16 @@ function Members() {
             </table>
           </div>
         </div>
-        {showEditModal && (
-          <UserModal
-            editMode={true}
-            user={selectedUser}
-            handleCloseModal={handleCloseModal}
-            updateUser={updateUser}
-          />
-        )}
+        {showEditModal &&
+          (console.log("Opening edit modal with user:", selectedUser),
+          (
+            <UserModal
+              editMode={true}
+              user={selectedUser}
+              handleCloseModal={handleCloseModal}
+              updateUser={updateUser}
+            />
+          ))}
         {showCreateModal && (
           <UserModal
             editMode={false}

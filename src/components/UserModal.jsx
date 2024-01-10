@@ -1,4 +1,3 @@
-import api from "../axios";
 import { useForm } from "react-hook-form";
 import { useUsers } from "../contexts/UserContext";
 
@@ -9,16 +8,28 @@ function UserModal({
   updateUser,
   handleCloseModal,
 }) {
-  const formMethods = useForm();
-  const { register, handleSubmit, errors, reset } = formMethods;
+  console.log("UserModal props:", { editMode, user });
+
+  const {
+    register,
+    handleSubmit,
+
+    formState: { errors },
+  } = useForm();
   const { users, setUsers } = useUsers();
 
   const onSubmit = (data) => {
-    // Se editMode for verdadeiro, pass userId para a função updateUser
+    console.log("Form submitted with data:", data);
+
     if (editMode) {
-      updateUser(data, user.id);
+      if (user) {
+        updateUser(data, user.id);
+      } else {
+        console.error("No user data for update");
+        // Handle the error appropriately
+      }
     } else {
-      // Se editMode for falso, chame a função createUser
+      console.log(errors, "os meus erros");
       createUser(data);
     }
   };
@@ -26,7 +37,6 @@ function UserModal({
   return (
     <div>
       {editMode ? <p>edit mode</p> : <p>Create mode</p>}
-
       <div className="modal bg-gray-500 bg-opacity-50 absolute inset-0 flex items-center justify-center">
         <div
           className="modal-content bg-white p-4 rounded-lg shadow-lg"
@@ -42,29 +52,33 @@ function UserModal({
             <h2 className="text-center text-2xl font-bold text-gray-900">
               {editMode ? "Edit User" : "Create User"}
             </h2>
-            {/* {showSuccessMessage && <div>Usuário atualizado com sucesso!</div>} */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form className="space-y-6">
               <input
                 type="text"
                 placeholder="Name"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                defaultValue={editMode && user ? user.name : ""}
-                {...register("name")}
+                className={`w-full p-2 border ${
+                  errors?.name ? "border-red-500" : "border-gray-300"
+                } rounded-md`}
+                defaultValue={editMode ? user?.name : ""}
+                {...register("name", { required: "Name is required" })}
               />
-
+              {errors?.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
               <input
                 type="text"
-                placeholder="Adress"
+                placeholder="Address"
                 className="w-full p-2 border border-gray-300 rounded-md"
-                defaultValue={editMode && user ? user.address : ""}
+                defaultValue={editMode ? user?.address : ""}
                 {...register("address", { required: "Address is required" })}
               />
-
               <input
                 type="email"
                 placeholder="Email"
                 className="w-full p-2 border border-gray-300 rounded-md"
-                defaultValue={editMode && user ? user.email : ""}
+                defaultValue={editMode ? user?.email : ""}
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -73,16 +87,14 @@ function UserModal({
                   },
                 })}
               />
-
               <input
                 type="password"
                 placeholder="Password (leave blank to keep current)"
                 className="w-full p-2 border border-gray-300 rounded-md"
                 {...register("password")}
               />
-
               <select
-                defaultValue={editMode && user ? user.role : ""}
+                defaultValue={editMode ? user?.role : ""}
                 {...register("role")}
                 className="w-full p-2 border border-gray-300 rounded-md"
               >
@@ -90,9 +102,9 @@ function UserModal({
                 <option value="ADMINISTRATOR">Administrator</option>
                 <option value="EMPLOYEE">Employee</option>
               </select>
-
               <button
                 type="submit"
+                onClick={handleSubmit(onSubmit)}
                 className="w-full flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold leading-6 text-white hover:bg-indigo-500"
               >
                 {editMode ? <p>Update User</p> : <p>Create User</p>}
