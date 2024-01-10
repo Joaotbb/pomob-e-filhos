@@ -23,6 +23,11 @@ function Members() {
     setShowCreateModal(false);
   };
 
+  const handleDeleteClick = (user) => {
+    setSelectedUser(user);
+    setShowDeleteModal(true);
+  };
+
   const createUser = async (data) => {
     try {
       console.log(data, "createUser data ");
@@ -62,6 +67,22 @@ function Members() {
       });
     } catch (error) {
       console.error("Error updating user", error);
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    try {
+      await api.delete(`/users/${userId}`);
+      setShowDeleteModal(false  );
+
+      setUsers((prevUsers) => {
+        // Remove the user from the list
+        const updatedUsers = prevUsers.filter((user) => user.id !== userId);
+        return updatedUsers;
+      });
+    } catch (error) {
+      console.error("Error deleting user", error);
+      // You can handle the error here, show a message, or perform any other actions.
     }
   };
 
@@ -139,7 +160,7 @@ function Members() {
                       </button>
 
                       <button
-                        onClick={() => setShowDeleteModal(true)}
+                        onClick={() => handleDeleteClick(user)}
                         className="ml-2"
                       >
                         <svg
@@ -178,7 +199,13 @@ function Members() {
           />
         )}
 
-        {showDeleteModal && <DeleteModal closeModal={setShowDeleteModal} />}
+        {showDeleteModal && (
+          <DeleteModal
+            closeModal={() => setShowDeleteModal(false)}
+            deleteUser={deleteUser}
+            user={selectedUser}
+          />
+        )}
       </div>
     </div>
   );

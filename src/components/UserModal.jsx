@@ -14,7 +14,7 @@ function UserModal({
   const { users, setUsers } = useUsers();
 
   const onSubmit = (data) => {
-    // Se editMode for verdadeiro, passe o userId para a função updateUser
+    // Se editMode for verdadeiro, pass userId para a função updateUser
     if (editMode) {
       updateUser(data, user.id);
     } else {
