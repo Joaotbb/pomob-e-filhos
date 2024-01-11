@@ -36,8 +36,7 @@ function UserModal({
 
   return (
     <div>
-      {editMode ? <p>edit mode</p> : <p>Create mode</p>}
-      <div className="modal bg-gray-500 bg-opacity-50 absolute inset-0 flex items-center justify-center">
+      <div className="modal bg-gray-500 bg-opacity-50 fixed inset-0 flex items-center justify-center">
         <div
           className="modal-content bg-white p-4 rounded-lg shadow-lg"
           style={{ minWidth: "300px", maxWidth: "600px", width: "90%" }}
@@ -49,7 +48,7 @@ function UserModal({
             &times;
           </span>
           <div className="w-full">
-            <h2 className="text-center text-2xl font-bold text-gray-900">
+            <h2 className="text-center text-2xl my-4 font-bold text-indigo-700 uppercase">
               {editMode ? "Edit User" : "Create User"}
             </h2>
             <form className="space-y-6">
