@@ -53,46 +53,81 @@ function UserModal({
               {editMode ? "Edit User" : "Create User"}
             </h2>
             <form className="space-y-6">
-              <input
-                type="text"
-                placeholder="Name"
-                className={`w-full p-2 border ${
-                  errors?.name ? "border-red-500" : "border-gray-300"
-                } rounded-md`}
-                defaultValue={editMode ? user?.name : ""}
-                {...register("name", { required: "Name is required" })}
-              />
-              {errors?.name && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.name.message}
-                </p>
-              )}
-              <input
-                type="text"
-                placeholder="Address"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                defaultValue={editMode ? user?.address : ""}
-                {...register("address", { required: "Address is required" })}
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                defaultValue={editMode ? user?.email : ""}
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /\S+@\S+\.\S+/,
-                    message: "Invalid email address",
-                  },
-                })}
-              />
-              <input
-                type="password"
-                placeholder="Password (leave blank to keep current)"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                {...register("password")}
-              />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className={`w-full p-2 border ${
+                    errors?.name ? "border-red-500" : "border-gray-300"
+                  } rounded-md`}
+                  defaultValue={editMode ? user?.name : ""}
+                  {...register("name", { required: "Name is required" })}
+                />
+                {errors?.name && (
+                  <p className="text-red-500 text-sm ">{errors.name.message}</p>
+                )}
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  placeholder="Address"
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  defaultValue={editMode ? user?.address : ""}
+                  {...register("address", { required: "Address is required" })}
+                />
+                {errors?.address && (
+                  <p className="text-red-500 text-sm ">
+                    {errors.address.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  defaultValue={editMode ? user?.email : ""}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /\S+@\S+\.\S+/,
+                      message: "Invalid email address",
+                    },
+                  })}
+                />
+                {errors?.email && (
+                  <p className="text-red-500 text-sm ">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  placeholder={
+                    editMode
+                      ? "Password (Leave blank to remain the same)"
+                      : "Password"
+                  }
+                  className={`w-full p-2 border ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  } rounded-md`}
+                  {...register("password", {
+                    // Example: Required validation when not in edit mode
+                    required: !editMode && "Password is required",
+                    // You can add more validation rules here if needed
+                  })}
+                />
+                {errors?.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+
               <select
                 defaultValue={editMode ? user?.role : ""}
                 {...register("role")}
