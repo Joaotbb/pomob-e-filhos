@@ -1,13 +1,11 @@
-import React from 'react'
+import Material from "../components/material";
 
 function Products() {
-
-
   return (
-    <div>
-      <div>Products Page</div>
+    <div className="container">
+      <Material />
     </div>
-  )
+  );
 }
 
-export default Products
+export default Products;

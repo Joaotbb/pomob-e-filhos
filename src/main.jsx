@@ -14,7 +14,7 @@ import Users from "./pages/Users.jsx";
 import Products from "./pages/Products.jsx";
 import Orders from "./pages/Orders.jsx";
 import { UserProvider } from "./contexts/UserContext.jsx";
-
+import { ProductProvider } from "./contexts/ProductContext.jsx";
 
 const router = createBrowserRouter([
   {
@@ -59,9 +59,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
       <UserProvider>
-
+        <ProductProvider>
           <RouterProvider router={router}></RouterProvider>
-
+        </ProductProvider>
       </UserProvider>
     </AuthProvider>
   </React.StrictMode>

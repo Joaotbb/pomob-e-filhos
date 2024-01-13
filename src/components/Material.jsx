@@ -1,110 +1,104 @@
-import api from "../axios";
+// import api from "../axios";
 import { useEffect, useState } from "react";
-import CreateButton from "../components/CreateButton";
+import CreateButton from "./CreateButton";
 import UserModal from "./UserModal";
-import { useUsers } from "../contexts/UserContext";
-import DeleteModal from "../components/DeleteModal";
+import { useProducts } from "../contexts/ProductContext";
+import DeleteModal from "./DeleteModal";
 
-function Members() {
-  const { users, setUsers, fetchUsers } = useUsers();
+function Material() {
+  const { products, setProducts, fetchProducts } = useProducts();
 
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const handleEditClick = (user) => {
-    console.log("Editing user:", user);
-    setSelectedUser(user);
+  const handleEditClick = (product) => {
+    setSelectedProduct(product);
     setShowEditModal(true);
   };
 
   const handleCloseModal = () => {
     setShowEditModal(false);
     setShowCreateModal(false);
+    setShowDeleteModal(false);
   };
 
-  const handleDeleteClick = (user) => {
-    setSelectedUser(user);
+  const handleDeleteClick = (product) => {
+    setSelectedProduct(product);
     setShowDeleteModal(true);
   };
 
-  const createUser = async (data) => {
+  const createProduct = async (data) => {
     try {
-      console.log(data, "createUser data ");
-      const response = await api.post("/users", data);
+      const response = await api.post("/products", data);
       if (response.data.success) {
-        console.log(response.data);
-        setUsers([...users, response.data.newUser]);
+        setProducts([...products, response.data.newProduct]);
       } else {
-        alert("Failed to create user.");
+        alert("Failed to create product.");
       }
     } catch (error) {
       console.error(error.response ? error.response.data : error.message);
-      alert("Failed to create user.");
+      alert("Failed to create product.");
     }
   };
 
-  const updateUser = async (data, userId) => {
-    console.log(data, "olha aqui");
+  const updateProduct = async (data, productId) => {
     try {
-      const response = await api.put(`/users/${userId}`, data);
+      const response = await api.put(`/products/${productId}`, data);
 
-      setUsers((prevUsers) => {
-        // Encontrar o usuário que está sendo atualizado
-        const userToUpdate = prevUsers.find((u) => u.id === userId);
+      setProducts((prevProducts) => {
+        const productToUpdate = prevProducts.find((p) => p.id === productId);
 
-        if (userToUpdate) {
-          // Se o usuário for encontrado, atualizar apenas esse usuário na lista
-          const updatedUsers = prevUsers.map((u) =>
-            u.id === userToUpdate.id ? response.data.updatedUser : u
+        if (productToUpdate) {
+          const updatedProducts = prevProducts.map((p) =>
+            p.id === productToUpdate.id ? response.data.updatedProduct : p
           );
 
-          return updatedUsers;
+          return updatedProducts;
         } else {
-          console.warn("User not found in the current list.");
-          return prevUsers;
+          console.warn("Product not found in the current list.");
+          return prevProducts;
         }
       });
     } catch (error) {
-      console.error("Error updating user", error);
+      console.error("Error updating product", error);
     }
   };
 
-  const deleteUser = async (userId) => {
+  const deleteProduct = async (productId) => {
     try {
-      await api.delete(`/users/${userId}`);
+      await api.delete(`/products/${productId}`);
       setShowDeleteModal(false);
 
-      setUsers((prevUsers) => {
-        // Remove the user from the list
-        const updatedUsers = prevUsers.filter((user) => user.id !== userId);
-        return updatedUsers;
+      setProducts((prevProducts) => {
+        const updatedProducts = prevProducts.filter(
+          (product) => product.id !== productId
+        );
+        return updatedProducts;
       });
     } catch (error) {
-      console.error("Error deleting user", error);
-      // You can handle the error here, show a message, or perform any other actions.
+      console.error("Error deleting product", error);
     }
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchProducts();
   }, []);
 
   useEffect(() => {
-    console.log("Selected user updated:", selectedUser);
-  }, [selectedUser]);
+    console.log("Selected product updated:", selectedProduct);
+  }, [selectedProduct]);
 
-  
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
           <h1 className="text-base font-semibold leading-6 text-gray-900 mt-6">
-            Users
+            Products
           </h1>
           <p className="mt-2 text-sm text-gray-700">
-            A list of all the users in your account including their name, title,
+            A list of all the products in your account including their name, title,
             email and role.
           </p>
         </div>
@@ -145,28 +139,28 @@ function Members() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {users.map((user) => (
-                  <tr key={user.email}>
+                {products.map((product) => (
+                  <tr key={product.email}>
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                      {user.name}
+                      {product.name}
                     </td>
 
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {user.email}
+                      {product.email}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                      {user.role}
+                      {product.role}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                       <button
-                        onClick={() => handleEditClick(user)}
+                        onClick={() => handleEditClick(product)}
                         className="text-indigo-600 hover:text-indigo-900 transition-transform transform hover:scale-110"
                       >
-                        Edit<span className="sr-only">, {user.name}</span>
+                        Edit<span className="sr-only">, {product.name}</span>
                       </button>
 
                       <button
-                        onClick={() => handleDeleteClick(user)}
+                        onClick={() => handleDeleteClick(product)}
                         className="ml-2"
                       >
                         <svg
@@ -190,20 +184,20 @@ function Members() {
           </div>
         </div>
         {showEditModal &&
-          (console.log("Opening edit modal with user:", selectedUser),
+          (console.log("Opening edit modal with user:", selectedProduct),
           (
             <UserModal
               editMode={true}
-              user={selectedUser}
+              product={selectedProduct}
               handleCloseModal={handleCloseModal}
-              updateUser={updateUser}
+              updateProduct={updateProduct}
             />
           ))}
         {showCreateModal && (
           <UserModal
             editMode={false}
             handleCloseModal={handleCloseModal}
-            createUser={createUser}
+            createProduct={createProduct}
           />
         )}
 
@@ -219,4 +213,4 @@ function Members() {
   );
 }
 
-export default Members;
+export default Material;
