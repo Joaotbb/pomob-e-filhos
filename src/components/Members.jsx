@@ -1,7 +1,7 @@
 import api from "../axios";
 import { useEffect, useState } from "react";
 import CreateButton from "../components/CreateButton";
-import UserModal from "./UserModal";
+import GenericModal from "./UserModal";
 import { useUsers } from "../contexts/UserContext";
 import DeleteModal from "../components/DeleteModal";
 
@@ -95,7 +95,6 @@ function Members() {
     console.log("Selected user updated:", selectedUser);
   }, [selectedUser]);
 
-  
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -192,7 +191,7 @@ function Members() {
         {showEditModal &&
           (console.log("Opening edit modal with user:", selectedUser),
           (
-            <UserModal
+            <GenericModal
               editMode={true}
               user={selectedUser}
               handleCloseModal={handleCloseModal}
@@ -200,7 +199,7 @@ function Members() {
             />
           ))}
         {showCreateModal && (
-          <UserModal
+          <GenericModal
             editMode={false}
             handleCloseModal={handleCloseModal}
             createUser={createUser}
